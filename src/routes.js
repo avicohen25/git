@@ -1,12 +1,14 @@
 import express from 'express';
 import { StatusCodes } from 'http-status-codes';
 import userService from './services/user.service.js';
+import pino from 'pino';
 
 //validation
 import { expressYupMiddleware } from 'express-yup-middleware';
 import { addUser } from './schemas.js';
 
 const router = express.Router();
+const logger = pino();
 
 const STATUS = {
   SUCCESS: 'OK',
@@ -14,13 +16,14 @@ const STATUS = {
 };
 
 router.get('/', (req, res) => {
-  //res.status(StatusCodes.BAD_REQUEST);
+  //res.status(StatusCodes.BAD_REQUEST);  
   res.status(StatusCodes.OK);
   res.send('Hello World!!! !!!');
 });
 
 
 router.get('/getUsers', (req, res) => {
+  logger.info('get users');
   res.status(StatusCodes.OK);
   const users = userService.getUsers();
   res.send(users);
