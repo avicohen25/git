@@ -1,22 +1,27 @@
 const express = require("express");
-const http = require("http");
+//const http = require("http");
+const bodyParser = require("body-parser");
 
 const app = express();
+const path = require('path');
 
-//middleware
+app.use(bodyParser.urlencoded({extended:false})); 
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+const middlewareRoutes = require('./routes/middleware');
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(middlewareRoutes);
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
 app.use((req, res, next) => {
-  console.log('in the middleware');
-  next();
+  res.status(404).send('<h1> Page Not Found </h1>');
 });
 
-app.get("/", (req, res) => {
-  res.send('<h1> hello from express!! </h1>');
-});
-
-const server = http.createServer(app);
-
+//const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => { console.log(`Server is running on http://localhost:${PORT}`); });
 
 
